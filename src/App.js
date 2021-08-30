@@ -1,11 +1,10 @@
-import './App.css';
-
-function App() {
+import Map from 'components/Map/Map'
+const App = () => {
   return (
-    <div className="App">
-      google maps
+    <div className='App'>
+      <Map />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
