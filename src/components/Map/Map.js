@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import {
   GoogleMap, useJsApiLoader, Marker, InfoWindow
@@ -36,6 +36,16 @@ const Map = () => {
     mapRef.current = map
   }, [])
 
+  useEffect(() => {
+    if (markers.length >= 1) {
+      const location = markers[markers.length - 1]
+      const { lat, lng } = location
+      mapRef.current.panTo({ lat, lng })
+      mapRef.current.setZoom(15)
+      console.log(location)
+    }
+  }, [markers])
+
   if (loadError) return 'Error'
   if (!isLoaded) return 'Loading...'
 
@@ -55,7 +65,6 @@ const Map = () => {
             key={`${marker.lat}-${marker.lng}`}
             position={{ lat: marker.lat, lng: marker.lng }}
             onClick={() => setSelected(marker)}
-            icon={undefined}
           />
         ))}
 
