@@ -1,10 +1,10 @@
 import { useState, useCallback, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import {
   GoogleMap, useJsApiLoader, Marker, InfoWindow
 } from '@react-google-maps/api'
 import { formatRelative } from 'date-fns'
 import SearchBox from 'components/SearchBox/SearchBox'
-import Locate from 'components/Locate/Locate'
 
 const libraries = ['places']
 const mapContainerStyle = {
@@ -27,27 +27,13 @@ const Map = () => {
     libraries
   })
 
-  const [markers, setMarkers] = useState([])
+  const { markers } = useSelector((state) => state.markers)
+
   const [selected, setSelected] = useState(null)
-  const onMapClick = useCallback((e) => {
-    setMarkers((current) => [
-      ...current,
-      {
-        lat: e.latLng.lat(),
-        lng: e.latLng.lng(),
-        time: new Date()
-      }
-    ])
-  }, [])
 
   const mapRef = useRef()
   const onMapLoad = useCallback((map) => {
     mapRef.current = map
-  }, [])
-
-  const panTo = useCallback(({ lat, lng }) => {
-    mapRef.current.panTo({ lat, lng })
-    mapRef.current.setZoom(15)
   }, [])
 
   if (loadError) return 'Error'
@@ -55,16 +41,13 @@ const Map = () => {
 
   return (
     <div>
-      <Locate panTo={panTo} />
-      <SearchBox panTo={panTo} />
-
+      <SearchBox />
       <GoogleMap
         id='map'
         mapContainerStyle={mapContainerStyle}
         zoom={8}
         center={center}
         options={options}
-        onClick={onMapClick}
         onLoad={onMapLoad}
       >
         {markers.map((marker) => (
@@ -86,7 +69,7 @@ const Map = () => {
                 <span role='img' aria-label='bear'>
                     📌
                 </span>{' '}
-                Alert
+                {selected.address}
               </h2>
               <p>Spotted {formatRelative(selected.time, new Date())}</p>
             </div>

@@ -1,11 +1,14 @@
-import React from 'react'
+import { useDispatch } from 'react-redux'
 import {
   Combobox, ComboboxInput, ComboboxPopover, ComboboxList, ComboboxOption
 } from '@reach/combobox'
 import '@reach/combobox/styles.css'
 import usePlacesAutocomplete, { getGeocode, getLatLng } from 'use-places-autocomplete'
+import { addMarker } from 'actions/index'
 
-const SearchBox = ({ panTo }) => {
+const SearchBox = () => {
+  const dispatch = useDispatch()
+
   const {
     ready,
     value,
@@ -27,8 +30,11 @@ const SearchBox = ({ panTo }) => {
 
     try {
       const results = await getGeocode({ address })
-      const { lat, lng } = await getLatLng(results[0])
-      panTo({ lat, lng })
+      const result = results[0]
+      const { lat, lng } = await getLatLng(result)
+      const marker = { address: result.formatted_address, lat: lat, lng: lng, time: new Date() }
+
+      dispatch(addMarker(marker))
     } catch (error) {
       throw new Error('Error:', error)
     }
