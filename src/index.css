@@ -35,25 +35,11 @@ code {
   border-radius: 5px;
 }
 
-.locate {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
-  z-index: 10;
-}
-
-.locate img {
-  width: 45px;
-  cursor: pointer;
-}
-
 @media (max-width: 600px) {
   .search {
-    left: 37%;
+    left: 47%;
     transform: translateX(-50%);
-    width: 70%
+    width: 80%
   }
 
   .search input {
